@@ -1,16 +1,16 @@
-title = "One Button";
+title = "Cat and Mouse";
 
 description = `
 `;
 
 characters = [
 `
-llllll
-llllll
-llllll
-llllll
-llllll
-llllll
+ L  L  
+LLLLLL
+LyLLyL
+LlLLlL
+ LLLL
+  ll
 `,`
 bbbbbb
 bbbbbb
@@ -31,15 +31,20 @@ rrrrrr
 const G = {
 	WIDTH: 100,
 	HEIGHT: 150,
+	MIN_X: 10,
+	MAX_X: 90,
 	ENEMY_SPEED: 1.0
 };
 
 options = {
-	viewSize: {x: G.WIDTH, y: G.HEIGHT}
+	viewSize: {x: G.WIDTH, y: G.HEIGHT},
+	theme: "simple"
 };
 
 //======== GAME FUNCTION ========//
-
+function rndPos () {
+	return;
+}
 
 //======== GAME OBJECTS ========//
 /**
@@ -72,19 +77,21 @@ let enemies;
  */
  let waveCount;
 
+ let arrayPos;
 
 //======== GAME  CODES ========//
 
 function update() {
 	if (!ticks) {
 		waveCount = 0;
+		arrayPos = [];
 
 		enemies = times(3, () => {
-			const posX = 10 * (rndi(0, 5) * 2 + 1);
+			const posX = G.MIN_X * (rndi(0, 5) * 2 + 1);
 			const posY = 0;
 			return {
 				pos: vec(posX, posY),
-				speed: 2
+				speed: 1
 			}
 		});
 		player = {
@@ -97,16 +104,19 @@ function update() {
 	// Update/Spawn the Enemies
 	if (enemies.length === 0) {
 		for (let i = 0; i < 3; i++) {
-			const posX = 10 * (rndi(0, 5) * 2 + 1);
+			const posX = G.MIN_X * (rndi(0, 5) * 2 + 1);
 			const posY = 0;
 			enemies.push({
 				pos: vec(posX, posY),
-				speed: 2
+				speed: 1 + (waveCount * 0.1)
 			});
 		}
 		waveCount++;
+	// Check the WaveCount
+		// console.log(waveCount);
 	}
 
+	// Remove Enemy when it goes out of screen
 	remove(enemies, (e) => {
 		e.pos.y += e.speed;
 		color("black");
@@ -114,28 +124,22 @@ function update() {
 
 		return (e.pos.y > G.HEIGHT);
 	})
-	// enemies.forEach((e) => {
-	// 	e.pos.y += e.speed;
-	// 	if (e.pos.y > G.HEIGHT) {
-	// 		e.pos.x = 
-	// 		e.pos.y = 0;
-	// 	}
-	// 	color("black");
-	// 	char("a", e.pos);
-	// });
 
-	if (input.isJustPressed) player.direction = !player.direction;
+	// If input or player reach the border, change direction
+	if (input.isJustPressed || player.pos.x < G.MIN_X || player.pos.x > G.MAX_X) 
+		player.direction = !player.direction;
+	if (player.direction)  player.pos.x += player.speed; // Go to the Right
+	if (!player.direction) player.pos.x -= player.speed; // Go to the Left
 
-	if (player.direction)  player.pos.x += player.speed;
-	if (!player.direction) player.pos.x -= player.speed;
-
-	player.pos.clamp(10, G.WIDTH - 10, 0, G.HEIGHT);
+	player.pos.clamp(G.MIN_X - 1, G.MAX_X + 1, 0, G.HEIGHT);
 	color("black");
 	char("b", player.pos);
 
+	// If Player collides with an enemy, Game Over
 	const isCollidingWithPlayer = char("b", player.pos).isColliding.char.a;
 	if (isCollidingWithPlayer) {
 		end();
 		play("powerUp");
 	}
+
 }
