@@ -5,11 +5,11 @@ description = `
 
 characters = [
 `
- L  L  
-LLLLLL
-LyLLyL
-LlLLlL
- LLLL
+ l  l  
+llllll
+lyllyl
+lLllLl
+ llll
   ll
 `,`
   LL  
@@ -38,8 +38,6 @@ RR  RR
 const G = {
 	WIDTH: 58,
 	HEIGHT: 87,
-	MIN_X: 2,
-	MAX_X: 56,
 	ENEMIES: 7
 };
 
@@ -82,16 +80,18 @@ let enemies;
 /**
  * @type { number }
  */
- let waveCount;
 
- let arrayPos;
+let waveCount;
+let BORDER = 2;
+let MAX_X = G.WIDTH - BORDER;
+let MIN_X = BORDER;
 
 //======== GAME  CODES ========//
 
 function update() {
 	if (!ticks) {
+		console.log(BORDER + "/" + MAX_X + "/" + MIN_X);
 		waveCount = 0;
-		arrayPos = [];
 
 		enemies = times(G.ENEMIES - 3, () => {
 			const posX = (rndi(0, G.ENEMIES) * 8) + 5;
@@ -119,6 +119,7 @@ function update() {
 			});
 		}
 		waveCount++;
+		play("powerUp");
 	// Check the WaveCount
 		// console.log(waveCount);
 	}
@@ -132,7 +133,7 @@ function update() {
 	})
 
 	// If input or player reach the border, change direction
-	if (input.isJustPressed || player.pos.x < G.MIN_X + 2 || player.pos.x > G.MAX_X - 2) 
+	if (input.isJustPressed || player.pos.x < MIN_X|| player.pos.x > MAX_X) 
 		player.direction = !player.direction;
 	if (player.direction)  {
 		player.pos.x += player.speed; // Go Right
@@ -149,7 +150,6 @@ function update() {
 	const isCollidingWithPlayer = char("b", player.pos).isColliding.char.a;
 	if (isCollidingWithPlayer) {
 		end();
-		play("powerUp");
 	}
 
 }
