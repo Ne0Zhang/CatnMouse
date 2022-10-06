@@ -94,7 +94,7 @@ function update() {
 		waveCount = 0;
 
 		enemies = times(G.ENEMIES - 4, () => {
-			const posX = (rndi(0, G.ENEMIES) * 8) + 5;
+			const posX = (rndi(0, ((G.WIDTH - 2))/8) * 8) + 5;
 			const posY = -1 * (rndi(0, 4) * 8) + 5;
 			return {
 				pos: vec(posX, posY),
@@ -111,17 +111,17 @@ function update() {
 	// Update/Spawn the Enemies
 	if (enemies.length === 0) {
 		for (let i = 0; i < G.ENEMIES - 4; i++) {
-			const posX = (rndi(0, G.ENEMIES) * 8) + 5;
+			const posX = (rndi(0, ((G.WIDTH - 2))/8) * 8) + 5;
 			const posY = -1 * (rndi(0, 4) * 8) + 5;
 			enemies.push({
 				pos: vec(posX, posY),
-				speed: 0.5 + (waveCount * 0.02)
+				speed: 0.4 + (waveCount * 0.005)
 			});
 		}
 		waveCount++;
 		addScore(1);
 		play("powerUp");
-		player.speed = player.speed + (waveCount * 0.015);
+		player.speed = player.speed + (waveCount * 0.006);
 	}
 
 	// Remove Enemy when it goes out of screen
@@ -133,7 +133,7 @@ function update() {
 	})
 
 	// If input or player reach the border, change direction
-	if (input.isJustPressed || player.pos.x < MIN_X|| player.pos.x > MAX_X) 
+	if (input.isJustPressed || player.pos.x < MIN_X+2|| player.pos.x > MAX_X-2) 
 		player.direction = !player.direction;
 	if (player.direction)  {
 		player.pos.x += player.speed; // Go Right
