@@ -129,6 +129,7 @@ function update() {
 		e.pos.y += e.speed;
 		color("black");
 		char("a", e.pos);
+		addScore(1);
 		return (e.pos.y > G.HEIGHT);
 	})
 
@@ -151,7 +152,5 @@ function update() {
 	if (isCollidingWithPlayer) {
 		end();
 	}
-
-	addScore(1);
 
 }
