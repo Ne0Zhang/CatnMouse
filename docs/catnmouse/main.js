@@ -36,9 +36,9 @@ RR  RR
 ];
 
 const G = {
-	WIDTH: 90,
-	HEIGHT: 135,
-	ENEMIES: 11
+	WIDTH: 82,
+	HEIGHT: 123,
+	ENEMIES: 14
 };
 
 options = {
@@ -95,15 +95,15 @@ function update() {
 
 		enemies = times(G.ENEMIES - 4, () => {
 			const posX = (rndi(0, G.ENEMIES) * 8) + 5;
-			const posY = -5;
+			const posY = -1 * (rndi(0, 4) * 8) + 5;
 			return {
 				pos: vec(posX, posY),
-				speed: 0.5
+				speed: 0.4
 			}
 		});
 		player = {
 			pos: vec(G.WIDTH * 0.5, G.HEIGHT * 0.85),
-			speed: 0.6,
+			speed: 0.5,
 			direction: true
 		};
 	}
@@ -112,7 +112,7 @@ function update() {
 	if (enemies.length === 0) {
 		for (let i = 0; i < G.ENEMIES - 4; i++) {
 			const posX = (rndi(0, G.ENEMIES) * 8) + 5;
-			const posY = 0;
+			const posY = -1 * (rndi(0, 4) * 8) + 5;
 			enemies.push({
 				pos: vec(posX, posY),
 				speed: 0.5 + (waveCount * 0.02)
@@ -121,9 +121,7 @@ function update() {
 		waveCount++;
 		addScore(1);
 		play("powerUp");
-		player.speed = player.speed + (waveCount * 0.02);
-	// Check the WaveCount
-		// console.log(waveCount);
+		player.speed = player.speed + (waveCount * 0.015);
 	}
 
 	// Remove Enemy when it goes out of screen
@@ -131,7 +129,7 @@ function update() {
 		e.pos.y += e.speed;
 		color("black");
 		char("a", e.pos);
-		return (e.pos.y > G.HEIGHT);
+		return (e.pos.y > G.HEIGHT + 10);
 	})
 
 	// If input or player reach the border, change direction
@@ -147,11 +145,12 @@ function update() {
 	color("black");
 	char("b", player.pos);
 
-	// player.pos.clamp(G.MIN_X + 2, G.MAX_X - 2, 0, G.HEIGHT);
-	
 	const isCollidingWithPlayer = char("b", player.pos).isColliding.char.a;
 	if (isCollidingWithPlayer) {
 		end();
 	}
+
+	color("light_red");
+	rect(vec(0, 0), 82, 7);
 
 }
