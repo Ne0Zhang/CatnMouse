@@ -36,14 +36,14 @@ RR  RR
 ];
 
 const G = {
-	WIDTH: 58,
-	HEIGHT: 87,
-	ENEMIES: 7
+	WIDTH: 90,
+	HEIGHT: 135,
+	ENEMIES: 11
 };
 
 options = {
 	viewSize: {x: G.WIDTH, y: G.HEIGHT},
-	theme: "simple"
+	theme: "shape"
 };
 
 //======== GAME FUNCTION ========//
@@ -93,9 +93,9 @@ function update() {
 		console.log(BORDER + "/" + MAX_X + "/" + MIN_X);
 		waveCount = 0;
 
-		enemies = times(G.ENEMIES - 3, () => {
+		enemies = times(G.ENEMIES - 4, () => {
 			const posX = (rndi(0, G.ENEMIES) * 8) + 5;
-			const posY = 0;
+			const posY = -5;
 			return {
 				pos: vec(posX, posY),
 				speed: 0.5
@@ -110,7 +110,7 @@ function update() {
 
 	// Update/Spawn the Enemies
 	if (enemies.length === 0) {
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < G.ENEMIES - 4; i++) {
 			const posX = (rndi(0, G.ENEMIES) * 8) + 5;
 			const posY = 0;
 			enemies.push({
@@ -119,7 +119,9 @@ function update() {
 			});
 		}
 		waveCount++;
+		addScore(1);
 		play("powerUp");
+		player.speed = player.speed + (waveCount * 0.02);
 	// Check the WaveCount
 		// console.log(waveCount);
 	}
@@ -129,7 +131,6 @@ function update() {
 		e.pos.y += e.speed;
 		color("black");
 		char("a", e.pos);
-		addScore(1);
 		return (e.pos.y > G.HEIGHT);
 	})
 
