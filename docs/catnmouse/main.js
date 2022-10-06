@@ -152,4 +152,6 @@ function update() {
 		end();
 	}
 
+	addScore(1);
+
 }
