@@ -1,3 +1,4 @@
+// @ts-nocheck
 title = "Cat-n-Mouse";
 
 description = `
@@ -42,8 +43,8 @@ const G = {
 };
 
 options = {
-	viewSize: {x: G.WIDTH, y: G.HEIGHT},
-	theme: "shape"
+	viewSize: { x: G.WIDTH, y: G.HEIGHT },
+	theme: "shapeDark"
 };
 
 //======== GAME FUNCTION ========//
@@ -81,6 +82,9 @@ let enemies;
  * @type { number }
  */
 
+let floor;
+let speed;
+
 let waveCount;
 let BORDER = 2;
 let MAX_X = G.WIDTH - BORDER;
@@ -90,6 +94,13 @@ let MIN_X = BORDER;
 
 function update() {
 	if (!ticks) {
+		floor = times(15, (i) => {
+			return {
+				y: i * 100 - 100,
+				type: "both",
+			};
+		});
+		speed = 0.6;
 		console.log(BORDER + "/" + MAX_X + "/" + MIN_X);
 		waveCount = 0;
 
@@ -107,6 +118,18 @@ function update() {
 			direction: true
 		};
 	}
+
+	color("purple");
+	rect(0, 0, 200, 200);
+	floor.forEach((r) => {
+		r.y = wrap(r.y + speed, -10, 120);
+		color("light_purple");
+		rect(r.type === "right" ? 10 : -18, r.y, r.type === "both" ? 100 : 10, 10);
+		color("purple");
+		rect(0, r.y, 100, 1);
+		rect(20, r.y, 1, 200);
+		rect(60, r.y, 1, 200);
+	});
 
 	// Update/Spawn the Enemies
 	if (enemies.length === 0) {
